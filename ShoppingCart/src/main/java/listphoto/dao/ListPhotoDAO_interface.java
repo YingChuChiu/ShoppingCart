@@ -15,4 +15,5 @@ public interface ListPhotoDAO_interface {
 
 	int update(ListPhoto update);
 
+	
 }
