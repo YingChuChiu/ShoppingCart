@@ -274,43 +274,43 @@ public class ListPhotoDaoJDBC {
 		// System.out.println("delete="+delete);
 
 		// 新增
-		ListPhoto insertPhoto = new ListPhoto();
-		insertPhoto.setName("柴犬");
-		insertPhoto.setAssort(100);
-		insertPhoto.setDateUpLoad(LocalDateTime.now());
-		insertPhoto.setVisibility(true);
-		insertPhoto.setPrice((double) 200);
-		try {
-			File file = new File("C:\\Special topic\\img\\01.jpg");
-			FileInputStream fis = new FileInputStream(file);
-			byte[] photopic = IOUtils.toByteArray(fis);
-			Blob blob = new javax.sql.rowset.serial.SerialBlob(photopic);
-			insertPhoto.setFile_photo(blob);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		photoDao.insert(insertPhoto);
-		System.out.println("insert=" + insertPhoto);
+//		ListPhoto insertPhoto = new ListPhoto();
+//		insertPhoto.setName("柴犬");
+//		insertPhoto.setAssort(100);
+//		insertPhoto.setDateUpLoad(LocalDateTime.now());
+//		insertPhoto.setVisibility(true);
+//		insertPhoto.setPrice((double) 200);
+//		try {
+//			File file = new File("C:\\Special topic\\img\\01.jpg");
+//			FileInputStream fis = new FileInputStream(file);
+//			byte[] photopic = IOUtils.toByteArray(fis);
+//			Blob blob = new javax.sql.rowset.serial.SerialBlob(photopic);
+//			insertPhoto.setFile_photo(blob);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		photoDao.insert(insertPhoto);
+//		System.out.println("insert=" + insertPhoto);
 
 		// 更新
-		// ListPhoto updatPhoto = new ListPhoto();
-		// updatPhoto.setName("YINGCHUCHIU");
-		// updatPhoto.setAssort(500);
-		// updatPhoto.setDateUpLoad(LocalDateTime.now());
-		// updatPhoto.setVisibility(true);
-		// updatPhoto.setPrice((double) 1000);
-		// try {
-		// File file = new File("C:\\Users\\Student\\Desktop\\img3.jpg");
-		// FileInputStream fis = new FileInputStream(file);
-		// byte[] photopic = IOUtils.toByteArray(fis);
-		// Blob blob = new javax.sql.rowset.serial.SerialBlob(photopic);
-		// updatPhoto.setFile_photo(blob);
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		// updatPhoto.setId(2);
-		// photoDao.update(updatPhoto);
-		// System.out.println("update=" + updatPhoto);
+		 ListPhoto updatPhoto = new ListPhoto();
+		 updatPhoto.setName("瑪爾濟斯");
+		 updatPhoto.setAssort(3);
+		 updatPhoto.setDateUpLoad(LocalDateTime.now());
+		 updatPhoto.setVisibility(true);
+		 updatPhoto.setPrice((double) 80);
+		 try {
+		 File file = new File("C:\\Users\\IrisChiu\\Desktop\\03.jpg");
+		 FileInputStream fis = new FileInputStream(file);
+		 byte[] photopic = IOUtils.toByteArray(fis);
+		 Blob blob = new javax.sql.rowset.serial.SerialBlob(photopic);
+		 updatPhoto.setFile_photo(blob);
+		 } catch (Exception e) {
+		 e.printStackTrace();
+		 }
+		 updatPhoto.setId(4);
+		 photoDao.update(updatPhoto);
+		 System.out.println("update=" + updatPhoto);
 	}
 }

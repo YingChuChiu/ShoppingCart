@@ -11,44 +11,42 @@
 </head>
 <body>
 	<form action="ListPhotoServlet" method="post">
-		<form action="GetImageFormServlet" method="get">
 
-			<table style="border: 3px #cccccc solid" cellpadding="10" border='1'>
-				<thead>
+		<table style="border: 3px #cccccc solid" cellpadding="10" border='1'>
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>圖片</th>
+					<th>名稱</th>
+					<th>類別</th>
+					<th>上傳日期</th>
+					<th>公開 /私密</th>
+					<th>預售價格</th>
+				</tr>
+			</thead>
+
+			<tbody>
+
+				<c:forEach var="list" items="${listphoto}">
 					<tr>
-						<th>id</th>
-						<th>file_photo</th>
-						<th>name</th>
-						<th>assort</th>
-						<th>dateUpLoad</th>
-						<th>visibility</th>
-						<th>price</th>
+						<td>${list.id}</td>
+
+						<td><img height='120' width='120'
+							src='${pageContext.servletContext.contextPath}/GetImageFormServlet?id=${list.id}&type=photo'>
+						</td>
+
+						<td>${list.name}</td>
+						<td>${list.assort}</td>
+						<td>${list.dateUpLoad}</td>
+						<td>${list.visibility}</td>
+						<td>${list.price}</td>
 					</tr>
-				</thead>
-
-				<tbody>
-
-					<c:forEach var="list" items="${listphoto}">
-						<tr>
-							<td>${list.id}</td>
-
-							<td><input type="hidden" name="id" value="${list.id}">
-								<img height='100' width='80'
-								src='${pageContext.servletContext.contextPath}/pages/ListPhotoServle?id=${list.id}&type=photo'>
-							</td>
-
-							<td>${list.name}</td>
-							<td>${list.assort}</td>
-							<td>${list.dateUpLoad}</td>
-							<td>${list.visibility}</td>
-							<td>${list.price}</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-			<input type="submit" value="ListPhoto">
-		</form>
-
+				</c:forEach>
+			</tbody>
+		</table>
+		<input type="submit" value="ListPhoto">
 	</form>
+
+
 </body>
 </html>

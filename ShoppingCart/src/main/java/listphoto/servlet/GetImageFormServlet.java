@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -18,9 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-/**
- * Servlet implementation class GetImageFormServlet
- */
+
 @WebServlet("/GetImageFormServlet")
 public class GetImageFormServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -41,7 +38,7 @@ public class GetImageFormServlet extends HttpServlet {
 			conn = ds.getConnection();
 			PreparedStatement pstmt = null;
 			if (type.equalsIgnoreCase("photo")) {
-				pstmt = conn.prepareStatement("SELECT name, file_photo from photo where id = ?;");
+				pstmt = conn.prepareStatement("SELECT name, file_photo from photo where id = ?");
 			}
 			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
@@ -74,6 +71,7 @@ public class GetImageFormServlet extends HttpServlet {
 				os.close();
 			}
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
