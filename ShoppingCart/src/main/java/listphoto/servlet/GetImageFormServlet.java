@@ -26,7 +26,7 @@ public class GetImageFormServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		String id = request.getParameter("id");
-		String type = request.getParameter("type");
+		String type = request.getParameter("type"); 
 
 		Connection conn = null;
 		OutputStream os = null;
