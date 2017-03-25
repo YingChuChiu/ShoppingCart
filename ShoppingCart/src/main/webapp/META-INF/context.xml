@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?> 
+<Context>
+  <Resource name="jdbc/Iwowwow" type="javax.sql.DataSource"
+      username="sa" password="passw0rd"
+      driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+      url="jdbc:sqlserver://localhost:1433;DatabaseName=IWOW"    
+      maxActive="100"
+      maxIdle="30"
+      maxWait="10000"
+  />  
+</Context>
