@@ -295,13 +295,13 @@ public class ListPhotoDaoJDBC {
 
 		// 更新
 		 ListPhoto updatPhoto = new ListPhoto();
-		 updatPhoto.setName("瑪爾濟斯");
+		 updatPhoto.setName("黑貴賓");
 		 updatPhoto.setAssort(3);
 		 updatPhoto.setDateUpLoad(LocalDateTime.now());
 		 updatPhoto.setVisibility(true);
 		 updatPhoto.setPrice((double) 80);
 		 try {
-		 File file = new File("C:\\Users\\IrisChiu\\Desktop\\03.jpg");
+		 File file = new File("C:\\Users\\IrisChiu\\Desktop\\04.png");
 		 FileInputStream fis = new FileInputStream(file);
 		 byte[] photopic = IOUtils.toByteArray(fis);
 		 Blob blob = new javax.sql.rowset.serial.SerialBlob(photopic);
