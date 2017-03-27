@@ -40,6 +40,10 @@
 						<td>${list.dateUpLoad}</td>
 						<td>${list.visibility}</td>
 						<td>${list.price}</td>
+ 						<td rowspan='1' width='180'align='center'>
+							<input type="image" src="../images/direct_purchase_btn.PNG" onClick="document.formname.submit();"  style="width:120px;"><P/>
+               				<input type="image" src="../images/add_to_cart_btn.PNG" onClick="document.formname.submit();"  style="width:120px;">
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
