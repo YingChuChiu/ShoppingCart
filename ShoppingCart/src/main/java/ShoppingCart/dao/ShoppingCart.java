@@ -8,9 +8,8 @@ import ShoppingCart.entity.OrderItem;
 public class ShoppingCart {
 
 	private Map<Integer, OrderItem> cart = new LinkedHashMap<>();
-
-	public ShoppingCart() {
-	}
+	// LinkedHashMap是顺序存放
+	// HashMap不是按插入顺序存放
 
 	public Map<Integer, OrderItem> getContent() {
 		return cart;

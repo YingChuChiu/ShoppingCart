@@ -5,17 +5,17 @@ import java.sql.Blob;
 public class OrderItem {
 	String name;
 	Blob file_photo;
-	int qty = 0;
-	int photoID = 0;
+	int id = 0;
+	int qty = 0; //數量
 	double price = 0;
-	double discount = 1;
-
-	public OrderItem(String name, Blob file_photo, int qty, int bookID, double price, double discount) {
+	double discount = 1; //總額
+	
+	public OrderItem(String name, Blob file_photo, int id, int qty, double price, double discount) {
 		super();
 		this.name = name;
 		this.file_photo = file_photo;
+		this.id = id;
 		this.qty = qty;
-		this.photoID = bookID;
 		this.price = price;
 		this.discount = discount;
 	}
@@ -36,20 +36,20 @@ public class OrderItem {
 		this.file_photo = file_photo;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public int getQty() {
 		return qty;
 	}
 
 	public void setQty(int qty) {
 		this.qty = qty;
-	}
-
-	public int getBookID() {
-		return photoID;
-	}
-
-	public void setBookID(int photoID) {
-		this.photoID = photoID;
 	}
 
 	public double getPrice() {
@@ -67,4 +67,5 @@ public class OrderItem {
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
+
 }
