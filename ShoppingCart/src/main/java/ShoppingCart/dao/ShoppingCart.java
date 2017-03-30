@@ -3,32 +3,31 @@ package ShoppingCart.dao;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import ShoppingCart.entity.OrderItem;
+import ShoppingCart.entity.OrderDetail;
 
 public class ShoppingCart {
+	
+	// LinkedHashMap是顺序存放，HashMap不是按插入顺序存放
+	private Map<Integer, OrderDetail> cart = new LinkedHashMap<>();
+	
 
-	private Map<Integer, OrderItem> cart = new LinkedHashMap<>();
-	// LinkedHashMap是顺序存放
-	// HashMap不是按插入顺序存放
-
-	public Map<Integer, OrderItem> getContent() {
+	public Map<Integer, OrderDetail> getContent() {
 		return cart;
 	}
 
-	public void addToCart(int photoID, OrderItem oi) {
-		if (oi.getQty() <= 0) {
+	//增加購物車商品
+	public void addToCart(int photoID, OrderDetail oi) { 
+		if (oi.getId() <= 0) {
 			return;
 		}
 
 		if (cart.get(photoID) == null) {
 			cart.put(photoID, oi);
-		} else {
-			OrderItem oit = cart.get(photoID);
-			oit.setQty(oi.getQty() + oit.getQty());
 		}
 	}
 
-	public int deletephoto(int photoID) {
+	//移除購物車商品
+	public int deletephoto(int photoID) { 
 		if (cart.get(photoID) != null) {
 			cart.remove(photoID);
 			return 1;
@@ -37,27 +36,29 @@ public class ShoppingCart {
 		}
 	}
 
+	//
 	public int getItemNumber() {
 		return cart.size();
 	}
 
+	//商品總計
 	public double getSubtotal() {
-		double subTotal = 0;
+		double subTotal = 0; 
 		Set<Integer> set = cart.keySet();
 		for (int n : set) {
 			double price = cart.get(n).getPrice();
-			double discount = cart.get(n).getDiscount();
-			int qty = cart.get(n).getQty();
-			subTotal += price * discount * qty;
+			
+			subTotal += price * 1;//限定商品只能買一次
 		}
 		return subTotal;
 	}
 
+	//商品清單
 	public void listCart() {
 		Set<Integer> set = cart.keySet();
 		for (Integer k : set) {
-			System.out.printf("BookID=%3d,  Qty=%3d,  price=%5.2f,  discount=%6.2f\n", k, cart.get(k).getQty(),
-					cart.get(k).getPrice(), cart.get(k).getDiscount());
+			System.out.printf("BookID=%3d,  Qty=%3d,  price=%5.2f,  discount=%6.2f\n", k, cart.get(k).getId(),
+					cart.get(k).getPrice());
 		}
 	}
 }

@@ -44,7 +44,7 @@ public class GetImageFormServlet extends HttpServlet {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				String name = rs.getString(1);
-				is = rs.getBinaryStream(2);
+				is = rs.getBinaryStream(2); //blob轉成BinaryStream
 				String mimeType = getServletContext().getMimeType(name);
 				response.setContentType(mimeType);
 				os = response.getOutputStream();

@@ -10,47 +10,72 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<div align='left'>
+		<c:choose>
+			<c:when test="${ShoppingCart.itemNumber > 0}">
+				<c:set var="cartContent" value="購物車內有${ShoppingCart.itemNumber}項商品" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="cartContent" value="您尚未購買任何商品" />
+			</c:otherwise>
+		</c:choose>
+
+		<div id='content'>
+			<TABLE>
+				<TR height='10'>
+					<TD width="270" align='left'><FONT color='red'>${cartContent} </FONT></TD>
+				</TR>
+
+				<TR>
+					<TD width="270" align='left'><FONT color='red'> 金額小計:<c:out value="${ShoppingCart.subtotal}" default="0" /> 元
+					</FONT></TD>
+				</TR>
+				<TR>
+					<TD><a href="ShowCartContent.jsp"><input type="submit" value="結帳"></a></TD>
+				</TR>
+			</TABLE>
+		</div>
+	</div>
+
+
+	<table style="border: 3px #cccccc solid" cellpadding="10" border='1'>
+		<thead>
+			<tr>
+				<th>id</th>
+				<th>圖片</th>
+				<th>名稱</th>
+				<th>類別</th>
+				<th>預售價格</th>
+				<th>加入購物車</th>
+			</tr>
+		</thead>
+		
+		<c:forEach var="list" items="${listphoto}">
+			<tr>
+				<td>${list.id}</td>
+
+				<td><img height='120' width='120'
+					src='${pageContext.servletContext.contextPath}/GetImageFormServlet?id=${list.id}&type=photo'>
+				</td>
+
+				<td>${list.name}</td>
+				<td>${list.assort}</td>
+				<td>${list.price}</td>
+				<td>
+					<FORM action="<c:url value='BuyPhotoServlet' />" method="POST">
+						<Input type='hidden' name='id' value='${list.id}'>
+						<Input type='hidden' name='name' value='${list.name}'>
+						<Input type='hidden' name='price' value='${list.price}'>
+						<Input type='submit' value='加入購物車'>
+					</FORM>
+				</td>
+		</c:forEach>
+	</table>
+
+
 	<form action="ListPhotoServlet" method="post">
-
-		<table style="border: 3px #cccccc solid" cellpadding="10" border='1'>
-			<thead>
-				<tr>
-					<th>id</th>
-					<th>圖片</th>
-					<th>名稱</th>
-					<th>類別</th>
-					<th>上傳日期</th>
-					<th>公開 /私密</th>
-					<th>預售價格</th>
-				</tr>
-			</thead>
-
-			<tbody>
-
-				<c:forEach var="list" items="${listphoto}">
-					<tr>
-						<td>${list.id}</td>
-
-						<td><img height='120' width='120'
-							src='${pageContext.servletContext.contextPath}/GetImageFormServlet?id=${list.id}&type=photo'>
-						</td>
-
-						<td>${list.name}</td>
-						<td>${list.assort}</td>
-						<td>${list.dateUpLoad}</td>
-						<td>${list.visibility}</td>
-						<td>${list.price}</td>
- 						<td rowspan='1' width='180'align='center'>
-							<input type="image" src="../images/direct_purchase_btn.PNG" onClick="document.formname.submit();"  style="width:120px;"><P/>
-               				<input type="image" src="../images/add_to_cart_btn.PNG" onClick="document.formname.submit();"  style="width:120px;">
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
 		<input type="submit" value="ListPhoto">
 	</form>
-
 
 </body>
 </html>
