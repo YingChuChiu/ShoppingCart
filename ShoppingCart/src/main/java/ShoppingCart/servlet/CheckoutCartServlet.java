@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import ShoppingCart.dao.ShoppingCart;
+import ShoppingCart.dao.ShoppingCartDAO;
 
 @WebServlet("/pages/CheckoutCartServlet")
 public class CheckoutCartServlet extends HttpServlet {
@@ -27,7 +27,7 @@ public class CheckoutCartServlet extends HttpServlet {
 			rd.forward(request, response);
 			return;
 		}
-		ShoppingCart sc = (ShoppingCart) session.getAttribute("ShoppingCart");
+		ShoppingCartDAO sc = (ShoppingCartDAO) session.getAttribute("ShoppingCart");
 		if (sc == null) {
 			// 如果找不到購物車(通常是Session逾時)，沒有必要往下執行
 			// 導向首頁

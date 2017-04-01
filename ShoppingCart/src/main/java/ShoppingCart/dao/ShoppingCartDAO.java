@@ -3,26 +3,26 @@ package ShoppingCart.dao;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import ShoppingCart.entity.OrderDetail;
+import ShoppingCart.entity.OrderItem;
 
-public class ShoppingCart {
+public class ShoppingCartDAO {
 	
 	// LinkedHashMap是顺序存放，HashMap不是按插入顺序存放
-	private Map<Integer, OrderDetail> cart = new LinkedHashMap<>();
+	private Map<Integer, OrderItem> cart = new LinkedHashMap<>();
 	
 
-	public Map<Integer, OrderDetail> getContent() {
+	public Map<Integer, OrderItem> getContent() {
 		return cart;
 	}
 
 	//增加購物車商品
-	public void addToCart(int photoID, OrderDetail oi) { 
+	public void addToCart(long id, OrderItem oi) { 
 		if (oi.getId() <= 0) {
 			return;
 		}
 
-		if (cart.get(photoID) == null) {
-			cart.put(photoID, oi);
+		if (cart.get(id) == null) {
+			cart.put((int) id, oi);
 		}
 	}
 

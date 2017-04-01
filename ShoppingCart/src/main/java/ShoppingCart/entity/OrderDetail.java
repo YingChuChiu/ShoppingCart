@@ -1,50 +1,56 @@
 package ShoppingCart.entity;
 
+import java.sql.Clob;
 
 public class OrderDetail {
-	int id = 0;
-	String name;
-	// int size;
-	int qty = 0 ; 
-	double price = 0;
+
+	Long id	;
+	Long order_id;
+	Double price;	
+	Clob note;	
 	
-	public OrderDetail(int id, String name, int qty, double price) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.qty = qty;
-		this.price = price;
+	public OrderDetail(){
+		
 	}
 
-	public int getId() {
+	public OrderDetail(Long id, Long order_id, Double price, Clob note) {
+		super();
+		this.id = id;
+		this.order_id = order_id;
+		this.price = price;
+		this.note = note;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Long getOrder_id() {
+		return order_id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setOrder_id(Long order_id) {
+		this.order_id = order_id;
 	}
 
-	public int getQty() {
-		return qty;
-	}
-
-	public void setQty(int qty) {
-		this.qty = qty;
-	}
-
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
+
+	public Clob getNote() {
+		return note;
+	}
+
+	public void setNote(Clob note) {
+		this.note = note;
+	}
+	
 }

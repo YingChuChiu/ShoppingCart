@@ -6,7 +6,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import ShoppingCart.dao.ShoppingCart;
+import ShoppingCart.dao.ShoppingCartDAO;
 
 // 本類別可修改購物車內的商品資料，包括刪除某項商品
 @WebServlet("/pages/DeleteCartServlet")
@@ -28,7 +28,7 @@ public class DeleteCartServlet extends HttpServlet {
 			return;
 		}
 		// 取出session物件內的ShoppingCart物件
-		ShoppingCart sc = (ShoppingCart) session.getAttribute("ShoppingCart");
+		ShoppingCartDAO sc = (ShoppingCartDAO) session.getAttribute("ShoppingCart");
 		
 		
 		System.out.println("-----DeleteCartServlet的資訊-------");

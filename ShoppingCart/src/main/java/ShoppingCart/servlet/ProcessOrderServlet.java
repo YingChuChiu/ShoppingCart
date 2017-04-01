@@ -1,7 +1,13 @@
 package ShoppingCart.servlet;
+
 import java.io.IOException;
+import java.sql.Clob;
 import java.sql.SQLException;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -10,71 +16,87 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.rowset.serial.SerialClob;
 
-import ShoppingCart.dao.ShoppingCart;
-import ShoppingCart.entity.Order;
+import ShoppingCart.dao.OrdersDAO;
+import ShoppingCart.dao.ShoppingCartDAO;
 import ShoppingCart.entity.OrderDetail;
-import _04_ShoppingCart.model.OrderBean;
-import _04_ShoppingCart.model.OrderDAO;
-import _04_ShoppingCart.model.OrderItemDAOBean;
+import ShoppingCart.entity.OrderItem;
+import ShoppingCart.entity.Orders;
+
 // OrderConfirm.jsp 呼叫本程式
-@WebServlet("/_04_ShoppingCart/ProcessOrder.do")
+@WebServlet("/pages/ProcessOrderServlet")
 public class ProcessOrderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doPost(request, response);
 	}
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-		request.setCharacterEncoding("UTF-8");
-		
-		String finalDecision = request.getParameter("finalDecision");		
-		HttpSession session = request.getSession(false);
-		if (session == null) {   // 使用逾時
-			response.sendRedirect(getServletContext().getContextPath() + "/index.jsp"  );
-			return;
-		}
 
-		ShoppingCart sc = (ShoppingCart) session.getAttribute("ShoppingCart");
-		if (sc == null) {
-			// 如果找不到購物車(通常是Session逾時)，沒有必要往下執行
-			// 導向首頁
-			response.sendRedirect(getServletContext().getContextPath() + "/index.jsp"  );
-			return;
-		}
-		if  (finalDecision.equals("CANCEL")){
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			request.setCharacterEncoding("UTF-8");
+
+			String finalDecision = request.getParameter("finalDecision");
+			HttpSession session = request.getSession(false);
+			if (session == null) { // 使用逾時
+				response.sendRedirect(getServletContext().getContextPath() + "/index.jsp");
+				return;
+			}
+
+			ShoppingCartDAO sc = (ShoppingCartDAO) session.getAttribute("ShoppingCart");
+			if (sc == null) {
+				// 如果找不到購物車(通常是Session逾時)，沒有必要往下執行
+				// 導向首頁
+				response.sendRedirect(getServletContext().getContextPath() + "/index.jsp");
+				return;
+			}
+
+			if (finalDecision.equals("CANCEL")) {
+				session.removeAttribute("ShoppingCart");
+				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()));
+				return; // 一定要記得 return
+			}
+			String idStr = request.getParameter("id");
+//			String updateStr = request.getParameter("update");
+			String memIdStr = request.getParameter("memId");
+			String dscStr = request.getParameter("dsc");
+			Long memId = 1L;
+			Clob dsc=null;
+//			System.out.println(updateStr);
+//			if (idStr != null) {
+//				Long id = Long.parseLong(idStr.trim()); // 字串轉整數
+//			}
+
+//			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//			LocalDateTime update = LocalDateTime.parse(updateStr, dtf);
+			LocalDateTime update = LocalDateTime.now();
+//			Long memId = Long.parseLong(memIdStr.trim());
+			if(dscStr!=null){
+			dsc = new SerialClob(dscStr.toCharArray());
+			}
+			Set<OrderDetail> orderDetails = new HashSet<OrderDetail>();
+			Map<Integer, OrderItem> cart = sc.getContent();
+			Set<Integer> set = cart.keySet();
+			for (Integer k : set) {
+				OrderItem oib = cart.get(k);
+				OrderDetail oiDAO = new OrderDetail(oib.getId(), oib.getOrder_id(), oib.getPrice(), oib.getNote());
+				orderDetails.add(oiDAO);
+			}
+			// OrderBean:封裝一筆訂單資料的容器(包含訂單主檔與訂單明細檔的資料)
+			Orders ob = new Orders(update, memId, dsc, orderDetails);
+			OrdersDAO order = new OrdersDAO();
+			order.insertOrder(ob);
 			session.removeAttribute("ShoppingCart");
-			response.sendRedirect(response.encodeRedirectURL (request.getContextPath()));
-			return;  // 一定要記得 return 
-		}
-		String id = mb.getMemberId();
-		double update = Math.round(sc.getSubtotal() * 1.05); 
-		String dsc = request.getParameter("dsc");
-		String memId = request.getParameter("memId");
-		Set<OrderDetail> orderDetails=new HashSet<OrderDetail>();
-		
-		Map<Integer, OrderDetail> cart = sc.getContent();
-		Set<Integer> set = cart.keySet();
-		for (Integer k : set) {
-			OrderDetail oib = cart.get(k);
-			String description = oib.getCompanyName().substring(0, 2) + " " +  
-                         		 // 比較上下兩行的寫法
-			                     oib.getAuthor().substring(0, Math.min(3, oib.getAuthor().length())) +  " " +  
-			                     oib.getTitle() ;
-			OrderItemDAOBean oiDAO = new OrderItemDAOBean(0, 0, oib.getBookID(), description, oib.getQty(), oib.getPrice(), oib.getDiscount());
-			items.add(oiDAO);
-		}
-		// OrderBean:封裝一筆訂單資料的容器(包含訂單主檔與訂單明細檔的資料)
-		Order ob = new Order(id, update, dsc,memId, orderDetails);  
-		OrderDAO order = new OrderDAO();
-		order.insertOrder(ob);
-		session.removeAttribute("ShoppingCart");
-		response.sendRedirect(response.encodeRedirectURL ("../ThanksForOrdering.jsp"));
-		} catch(NamingException e) {
-			throw new ServletException();
-		} catch(SQLException e) {
+			response.sendRedirect(getServletContext().getContextPath()+"/pages/ThanksForOrdering.jsp");
+		} catch (NamingException e) {
 			e.printStackTrace();
 			throw new ServletException();
-		}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServletException();
+		}
 	}
 }
