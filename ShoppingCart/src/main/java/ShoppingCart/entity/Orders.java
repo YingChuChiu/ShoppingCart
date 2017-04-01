@@ -9,24 +9,16 @@ public class Orders {
 
 	private Long id;
 	private LocalDateTime update;
-	private Long memId; // 說明下訂人員
 	private Clob dsc;
+	private Long memId; 
 	private Set<OrderDetail> orderDetails = new HashSet<OrderDetail>();
-
-	public Orders(Long id, LocalDateTime update, Long memId, Clob dsc, Set<OrderDetail> orderDetails) {
-		super();
-		this.id = id;
-		this.update = update;
-		this.memId = memId;
-		this.dsc = dsc;
-		this.orderDetails = orderDetails;
-	}
-	public Orders(LocalDateTime update, Long memId, Clob dsc, Set<OrderDetail> orderDetails) {
+	
+	public Orders( LocalDateTime update, Clob dsc, Set<OrderDetail> orderDetails) {
 		super();
 		
 		this.update = update;
-		this.memId = memId;
 		this.dsc = dsc;
+		this.memId = memId;
 		this.orderDetails = orderDetails;
 	}
 
@@ -46,20 +38,20 @@ public class Orders {
 		this.update = update;
 	}
 
-	public Long getMemId() {
-		return memId;
-	}
-
-	public void setMemId(Long memId) {
-		this.memId = memId;
-	}
-
 	public Clob getDsc() {
 		return dsc;
 	}
 
 	public void setDsc(Clob dsc) {
 		this.dsc = dsc;
+	}
+
+	public Long getMemId() {
+		return memId;
+	}
+
+	public void setMemId(Long memId) {
+		this.memId = memId;
 	}
 
 	public Set<OrderDetail> getOrderDetails() {
@@ -69,5 +61,5 @@ public class Orders {
 	public void setOrderDetails(Set<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
-
+	
 }
