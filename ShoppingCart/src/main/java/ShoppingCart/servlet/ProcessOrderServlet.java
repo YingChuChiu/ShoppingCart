@@ -60,21 +60,12 @@ public class ProcessOrderServlet extends HttpServlet {
 				return; // 一定要記得 return
 			}
 			String idStr = request.getParameter("id");
-			// String updateStr = request.getParameter("update");
 			String memIdStr = request.getParameter("memId");
 			String dscStr = request.getParameter("dsc");
 			Long memId = 1L;
 			Clob dsc = null;
-			// System.out.println(updateStr);
-			// if (idStr != null) {
-			// Long id = Long.parseLong(idStr.trim()); // 字串轉整數
-			// }
-
-			// DateTimeFormatter dtf =
-			// DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			// LocalDateTime update = LocalDateTime.parse(updateStr, dtf);
 			LocalDateTime update = LocalDateTime.now();
-			// Long memId = Long.parseLong(memIdStr.trim());
+			
 			if (dscStr != null) {
 				dsc = new SerialClob(dscStr.toCharArray());
 			}
@@ -83,11 +74,12 @@ public class ProcessOrderServlet extends HttpServlet {
 			Set<Integer> set = cart.keySet();
 			for (Integer k : set) {
 				OrderItem oib = cart.get(k);
-				OrderDetail oiDAO = new OrderDetail(oib.getId(), oib.getOrder_id(), oib.getPrice(), oib.getNote());
+				OrderDetail oiDAO = new OrderDetail(oib.getId(),oib.getOrder_id(),oib.getId(), oib.getName(), oib.getPrice(),
+						oib.getNote());
 				orderDetails.add(oiDAO);
 			}
 			// OrderBean:封裝一筆訂單資料的容器(包含訂單主檔與訂單明細檔的資料)
-			Orders ob = new Orders( update, dsc, orderDetails);
+			Orders ob = new Orders(update, dsc, orderDetails);
 			OrdersDAO order = new OrdersDAO();
 			order.insertOrder(ob);
 			session.removeAttribute("ShoppingCart");

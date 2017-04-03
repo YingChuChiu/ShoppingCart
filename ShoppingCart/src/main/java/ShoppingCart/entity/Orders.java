@@ -18,7 +18,6 @@ public class Orders {
 		
 		this.update = update;
 		this.dsc = dsc;
-		this.memId = memId;
 		this.orderDetails = orderDetails;
 	}
 

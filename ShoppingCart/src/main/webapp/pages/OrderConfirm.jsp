@@ -60,6 +60,7 @@
 						<TABLE border='1' border-color:rgb(100, 100, 255);">
 
 							<TR>
+							    <TH style="text-align: center; font-size: 12pt;" width="350">圖片</TH>
 								<TH style="text-align: center; font-size: 12pt;" width="350">圖片名稱</TH>
 								<TH style="text-align: center; font-size: 12pt;" width="80">圖片價格</TH>
 								<TH style="text-align: center; font-size: 12pt;" width="110">小計</TH>
@@ -69,22 +70,23 @@
 								items="${ShoppingCart.content}">
 
 								<TR height='16'>
-									<TD style="text-align: left; font-size: 11pt;">${anEntry.value.name}</TD>
+								    <TD style="text-align: center; font-size: 11pt;"><img height='120' width='120' src='${pageContext.servletContext.contextPath}/GetImageFormServlet?id=${anEntry.value.id}&type=photo'></TD>
+									<TD style="text-align: center; font-size: 11pt;">${anEntry.value.name}</TD>
 									<TD style="text-align: center; font-size: 11pt;">${fn:substring(anEntry.value.price, 0, 3)}</TD>
-									<TD style="text-align: right; font-size: 11pt;"><fmt:formatNumber
+									<TD style="text-align: center; font-size: 11pt;"><fmt:formatNumber
 											value="${anEntry.value.price}" pattern="#,###" />元</TD>
 
 								</TR>
 							</c:forEach>
 
 							<TR height='16'>
-								<TD style="text-align: right; font-size: 11pt;" colspan='2'>合計金額：</TD>
+								<TD style="text-align: right; font-size: 11pt;" colspan='3'>合計金額：</TD>
 								<TD style="text-align: right; font-size: 11pt;"><fmt:formatNumber
 										value="${ShoppingCart.subtotal}" pattern="#,###,###" />元</TD>
 
 							</TR>
 							<TR>
-								<TD colspan='2' style="text-align: right; font-size: 11pt;">總計金額：</TD>
+								<TD colspan='3' style="text-align: right; font-size: 11pt;">總計金額：</TD>
 								<TD style="text-align: right; font-size: 11pt; color: #AA0200;"><fmt:formatNumber
 										value="${ShoppingCart.subtotal + VAT }" pattern="#,###,###" />元</TD>
 

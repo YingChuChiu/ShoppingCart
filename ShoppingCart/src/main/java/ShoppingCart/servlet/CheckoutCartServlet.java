@@ -20,13 +20,7 @@ public class CheckoutCartServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		if (session == null) { // 使用逾時
-			request.setAttribute("Errors", "使用逾時，請重新登入");
-			RequestDispatcher rd = request
-					.getRequestDispatcher("/_04_ShoppingCart/CheckError.jsp");
-			rd.forward(request, response);
-			return;
-		}
+
 		ShoppingCartDAO sc = (ShoppingCartDAO) session.getAttribute("ShoppingCart");
 		if (sc == null) {
 			// 如果找不到購物車(通常是Session逾時)，沒有必要往下執行

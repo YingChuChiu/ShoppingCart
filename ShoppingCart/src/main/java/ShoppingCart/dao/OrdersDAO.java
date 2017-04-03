@@ -6,9 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.naming.Context;
@@ -25,8 +30,6 @@ import ShoppingCart.entity.Orders;
 //   3.查詢orders表格內的所有訂單
 
 public class OrdersDAO {
-	private static final long serialVersionUID = 1L;
-	private String memberId = null;
 	private DataSource ds = null;
 
 	public OrdersDAO() throws NamingException {
@@ -41,18 +44,11 @@ public class OrdersDAO {
 		ResultSet generatedKeys = null;
 		PreparedStatement pStmt2 = null;
 		try {
-			System.out.println("123");
 			conn = ds.getConnection();
 			conn.setAutoCommit(false); // 開啟JDBC Transaction
 			pStmt = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS);
-			// pStmt.setLong(1, od.getId());
-			System.out.println("123");
 			pStmt.setObject(1, od.getUpdate());
-			System.out.println(od.getUpdate());
-			// pStmt.setLong(2, od.getMemId());
-			// System.out.println(od.getMemId());
 			pStmt.setClob(2, od.getDsc());
-			System.out.println(od.getDsc());
 
 			pStmt.executeUpdate();
 			int id = 0;
@@ -64,22 +60,17 @@ public class OrdersDAO {
 			} else {
 				throw new SQLException("Creating user failed, no generated key obtained.");
 			}
-			String sqlItem = "Insert Into Order_details ( order_id, price, note) " + " values( ?, ?, ?) ";
+			String sqlItem = "Insert Into Order_details (order_id,pic_id,description,price, note) "
+					+ " values( ?, ?, ?, ?,?) ";
 			Set<OrderDetail> items = od.getOrderDetails();
 			pStmt2 = conn.prepareStatement(sqlItem);
-			int n = 0;
 			for (OrderDetail oib : items) {
-				// 下列四個敘述為交易測試而編寫
-				// n++;
-				// if (n > 2) {
-				// System.out.println("發生例外 n>2");
-				// throw new SQLException("JDBC交易測試用");
-				// }
-				// pStmt2.setLong(1, id);
 				pStmt2.setLong(1, id);
-				pStmt2.setDouble(2, oib.getPrice());
-				pStmt2.setClob(3, oib.getNote());
-				int count = pStmt2.executeUpdate();
+				pStmt2.setLong(2, oib.getPicId());
+				pStmt2.setString(3, oib.getDescription());
+				pStmt2.setDouble(4, oib.getPrice());
+				pStmt2.setClob(5, oib.getNote());
+				pStmt2.executeUpdate();
 				pStmt2.clearParameters();
 			}
 			System.out.println("123");
@@ -104,160 +95,107 @@ public class OrdersDAO {
 			}
 		}
 	}
-	//
-	// public OrderBean getOrder(int orderNo) throws SQLException {
-	// String sqlOrder = "SELECT * FROM orders WHERE orderNo = ? ";
-	// String sqlOrderItems = "SELECT * FROM orderItems WHERE orderNo = ? order
-	// by seqNo";
-	// List<OrderItemDAOBean> items = new ArrayList<OrderItemDAOBean>();
-	// Connection conn = null;
-	// PreparedStatement pStmt = null;
-	// PreparedStatement pStmt2 = null;
-	// ResultSet rs = null;
-	// ResultSet rs2 = null;
-	// OrderBean ob = null;
-	// try {
-	// conn = ds.getConnection();
-	// pStmt = conn.prepareStatement(sqlOrder);
-	// pStmt.setInt(1, orderNo);
-	// rs = pStmt.executeQuery();
-	//
-	// if (rs.next()) {
-	// ob = new OrderBean();
-	// ob.setOrderNo(rs.getInt(1));
-	// ob.setUserId(rs.getString(2));
-	// ob.setTotalAmount(rs.getDouble(3));
-	// ob.setShippingAddress(rs.getString(4));
-	// ob.setBno(rs.getString(5));
-	// ob.setInvoiceTitle(rs.getString(6));
-	// ob.setOrderDate(rs.getDate(7));
-	// ob.setShippingDate(rs.getDate(8));
-	// }
-	// if (ob == null) {
-	// throw new SQLException("資料庫邏輯錯誤：無此紀錄, 訂單編號=" + orderNo);
-	// } else {
-	// pStmt2 = conn.prepareStatement(sqlOrderItems);
-	// pStmt2.setInt(1, orderNo);
-	// rs2 = pStmt2.executeQuery();
-	// OrderItemDAOBean oib = null;
-	// while (rs2.next()) {
-	// oib = new OrderItemDAOBean();
-	// oib.setSeqno(rs2.getInt(1));
-	// oib.setOrderNo(rs2.getInt(2));
-	// oib.setBookId(rs2.getInt(3));
-	// oib.setDescription(rs2.getString(4));
-	// oib.setAmount(rs2.getInt(5));
-	// oib.setUnitPrice(rs2.getDouble(6));
-	// oib.setDiscount(rs2.getDouble(7));
-	// items.add(oib);
-	// }
-	// }
-	// ob.setItems(items);
-	// } finally {
-	// if (rs != null) {
-	// rs.close();
-	// }
-	// if (rs2 != null) {
-	// rs2.close();
-	// }
-	// if (pStmt != null) {
-	// pStmt.close();
-	// }
-	// if (pStmt2 != null) {
-	// pStmt2.close();
-	// }
-	// if (conn != null) {
-	// conn.close();
-	// }
-	// }
-	// return ob;
-	// }
-	//
-	// public Collection<OrderBean> getAllOrders() throws SQLException {
-	// Collection<OrderBean> coll = new ArrayList<OrderBean>();
-	// String sqlOrder = "SELECT * FROM orders Order by orderDate desc, orderNo
-	// desc ";
-	// PreparedStatement pStmt = null;
-	// Connection conn = null;
-	// ResultSet rs = null;
-	// OrderBean ob = null;
-	// try {
-	// conn = ds.getConnection();
-	// pStmt = conn.prepareStatement(sqlOrder);
-	// rs = pStmt.executeQuery();
-	//
-	// while (rs.next()) {
-	// ob = new OrderBean();
-	// ob.setOrderNo(rs.getInt(1));
-	// ob.setUserId(rs.getString(2));
-	// ob.setTotalAmount(rs.getDouble(3));
-	// ob.setShippingAddress(rs.getString(4));
-	// ob.setBno(rs.getString(5));
-	// ob.setInvoiceTitle(rs.getString(6));
-	// ob.setOrderDate(rs.getDate(7));
-	// ob.setShippingDate(rs.getDate(8));
-	// coll.add(ob);
-	// }
-	// } finally {
-	// if (rs != null) {
-	// rs.close();
-	// }
-	// if (pStmt != null) {
-	// pStmt.close();
-	// }
-	// if (conn != null) {
-	// conn.close();
-	// }
-	// }
-	// // System.out.println("OrderDAO coll.size()=" + coll.size());
-	// return coll;
-	// }
-	//
-	// public Collection<OrderBean> getMemberOrders() throws SQLException {
-	// Collection<OrderBean> coll = new ArrayList<OrderBean>();
-	// String sqlOrder = "SELECT * FROM orders Order by orderDate desc where
-	// userId = ?";
-	// PreparedStatement pStmt = null;
-	// Connection conn = null;
-	// ResultSet rs = null;
-	// OrderBean ob = null;
-	// try {
-	// conn = ds.getConnection();
-	// pStmt = conn.prepareStatement(sqlOrder);
-	// pStmt.setString(1, memberId);
-	// rs = pStmt.executeQuery();
-	//
-	// while (rs.next()) {
-	// ob = new OrderBean();
-	// ob.setUserId(rs.getString(2));
-	// ob.setTotalAmount(rs.getDouble(3));
-	// ob.setShippingAddress(rs.getString(4));
-	// ob.setBno(rs.getString(5));
-	// ob.setInvoiceTitle(rs.getString(6));
-	// ob.setOrderDate(rs.getDate(7));
-	// ob.setShippingDate(rs.getDate(8));
-	// coll.add(ob);
-	// }
-	// } finally {
-	// if (rs != null) {
-	// rs.close();
-	// }
-	// if (pStmt != null) {
-	// pStmt.close();
-	// }
-	// if (conn != null) {
-	// conn.close();
-	// }
-	// }
-	// return coll;
-	// }
-	//
-	// public String getMemberId() {
-	// return memberId;
-	// }
-	//
-	// public void setMemberId(String memberId) {
-	// this.memberId = memberId;
-	// }
 
+	public Orders getOrder(Long no) throws SQLException {
+		String sqlOrder = "SELECT * FROM orders WHERE id = ? ";
+		String sqlOrderItems = "SELECT * FROM Order_details WHERE order_id = ?";
+		Set<OrderDetail> items = new HashSet<OrderDetail>();
+		Connection conn = null;
+		PreparedStatement pStmt = null;
+		PreparedStatement pStmt2 = null;
+		ResultSet rs = null;
+		ResultSet rs2 = null;
+		Orders ob = null;
+		try {
+			conn = ds.getConnection();
+			pStmt = conn.prepareStatement(sqlOrder);
+			pStmt.setLong(1, no);
+			rs = pStmt.executeQuery();
+			if (rs.next()) {
+				ob = new Orders(null, null, null);
+				ob.setId(rs.getLong(1));
+				Timestamp date = rs.getTimestamp("D_UPDATE");
+				Instant instant = date.toInstant();
+				LocalDateTime datetime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+				ob.setUpdate(datetime);
+				ob.setDsc(rs.getClob(3));
+				ob.setMemId(rs.getLong(4));
+			}
+			if (ob == null) {
+				throw new SQLException("資料庫邏輯錯誤：無此紀錄, 訂單編號=" + no);
+			} else {
+				pStmt2 = conn.prepareStatement(sqlOrderItems);
+				pStmt2.setLong(1, no);
+				rs2 = pStmt2.executeQuery();
+				OrderDetail oib = null;
+				while (rs2.next()) {
+					oib = new OrderDetail();
+					oib.setId(rs2.getLong(1));
+					oib.setOrder_id(rs2.getLong(2));
+					oib.setPicId(rs2.getLong(3));
+					oib.setDescription(rs2.getString(4));
+					oib.setPrice(rs2.getDouble(5));
+					oib.setNote(rs2.getClob(6));
+					items.add(oib);
+				}
+			}
+			ob.setOrderDetails(items);
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (rs2 != null) {
+				rs2.close();
+			}
+			if (pStmt != null) {
+				pStmt.close();
+			}
+			if (pStmt2 != null) {
+				pStmt2.close();
+			}
+			if (conn != null) {
+				conn.close();
+			}
+		}
+		return ob;
+	}
+
+	public Collection<Orders> getAllOrders() throws SQLException {
+		Collection<Orders> coll = new ArrayList<Orders>();
+		String sqlOrder = "SELECT * FROM orders Order by D_UPDATE desc, ID desc ";
+		PreparedStatement pStmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		Orders ob = null;
+		try {
+			conn = ds.getConnection();
+			pStmt = conn.prepareStatement(sqlOrder);
+			rs = pStmt.executeQuery();
+
+			while (rs.next()) {
+				ob = new Orders(null, null, null);
+				ob.setId(rs.getLong(1));
+				Timestamp date = rs.getTimestamp("D_UPDATE");
+				Instant instant = date.toInstant();
+				LocalDateTime datetime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+				ob.setUpdate(datetime);
+				System.out.println(datetime);
+				ob.setDsc(rs.getClob(3));
+				ob.setMemId(rs.getLong(4));
+				coll.add(ob);
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (pStmt != null) {
+				pStmt.close();
+			}
+			if (conn != null) {
+				conn.close();
+			}
+		}
+		// System.out.println("OrderDAO coll.size()=" + coll.size());
+		return coll;
+	}
 }

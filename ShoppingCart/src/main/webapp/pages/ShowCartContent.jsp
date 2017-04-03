@@ -105,26 +105,24 @@ function Abort() {
 				<TD><font size='-1' face='標楷體, Arial'>
 						<TABLE border='1'>
 							<TR>
+							    <TH width="200">圖片</TH>
 								<TH width="280">圖片名稱</TH>
 								<TH width="70">圖片價格</TH>
 								<TH width="110">小計</TH>
 								<TH width="110">修改</TH>
 							</TR>
-							<c:forEach varStatus="vs" var="anEntry"
-								items="${ShoppingCart.content}">
+							<c:forEach varStatus="vs" var="anEntry" items="${ShoppingCart.content}">
 								<TR height='16'>
+								    <TD align='center'><img height='120' width='120' src='${pageContext.servletContext.contextPath}/GetImageFormServlet?id=${anEntry.value.id}&type=photo'></TD>
 									<TD>${anEntry.value.name}</TD>
 									<TD style="text-align: center;">${fn:substring(anEntry.value.price, 0, 3)}</TD>
-									<TD style="text-align: right;"><fmt:formatNumber
-											value="${anEntry.value.price}" pattern="#,###" />元</TD>
-									<TD><Input type="button" name="delete" value="刪除"
-										onClick="confirmDelete(${anEntry.key})"></TD>
+									<TD style="text-align: center;"><fmt:formatNumber value="${anEntry.value.price}" pattern="#,###" />元</TD>
+									<TD align='center'><Input type="button" name="delete" value="刪除" onClick="confirmDelete(${anEntry.key})"></TD>
 								</TR>
 							</c:forEach>
 							<TR height='16'>
-								<TD colspan='2' align='right'>合計金額：</TD>
-								<TD align='right'><fmt:formatNumber value="${subtotal}"
-										pattern="#,###,###" />元</TD>
+								<TD colspan='4' align='right'>合計金額：</TD>
+								<TD align='right'><fmt:formatNumber value="${subtotal}" pattern="#,###,###" />元</TD>
 							</TR>
 						</TABLE>
 				</font>
@@ -134,7 +132,7 @@ function Abort() {
 					<TABLE border='1'>
 						<TR>
 							<TD width="260" align='center'><A
-								href="<c:url value='../_03_listBooks/DisplayPageProducts?pageNo=1' />">繼續購物</A>
+								href="index.jsp">繼續購物</A>
 							</TD>
 							<TD width="260" align='center'><A
 								href="<c:url value='CheckoutCartServlet' />"
